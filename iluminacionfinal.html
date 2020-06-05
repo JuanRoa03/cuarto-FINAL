@@ -1,0 +1,967 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <title>ILUMINACION</title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <script src="js/three.js"></script>    
+    <script src="js/controls/OrbitControls.js"></script>
+    <script src="js/csg.js"></script>
+		<script src="js/THREE.CSG.js"></script>
+    <script>
+		var scene, aspect, camera, renderer,controls;
+    var ambientLight,light;
+    var USE_WIREFRAME = false;
+		
+		init();
+		animate();
+	
+		function init(){
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color( 0xAAAAAA );
+        aspect = window.innerWidth / window.innerHeight;
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        camera = new THREE.PerspectiveCamera( 45, aspect, 0.1, 1000);
+        renderer.shadowMap.enabled = true;// IMP
+	      renderer.shadowMap.type = THREE.BasicShadowMap;
+        document.body.appendChild( renderer.domElement );
+        controls = new THREE.OrbitControls( camera, renderer.domElement );
+				  
+        var size = 20;
+        var arrowSize = 1;
+        var divisions = 25;
+        var origin = new THREE.Vector3( 0, 0, 0 );
+        var x = new THREE.Vector3( 1, 0, 0 );
+        var y = new THREE.Vector3( 0, 1, 0 );
+		  	var z = new THREE.Vector3( 0, 0, 1 );
+			  var color1 = new THREE.Color( 0x848B8E );
+		  	var color2 = new THREE.Color( 0x333333 );
+		  	var colorR = new THREE.Color( 0xAA3333 );
+		  	var colorG = new THREE.Color( 0x33AA33 );
+		  	var colorB = new THREE.Color( 0x333366 );
+		  
+		  	//CREAR LAS GRILLAS PARA EL ESCENARIO
+		  	var axesHelper = new THREE.AxesHelper( size );
+		  	var gridHelperXY = new THREE.GridHelper( size, divisions, color1, color1);
+		  	var gridHelperXZ = new THREE.GridHelper( size, divisions, color2, color2 );
+		  	var gridHelperYZ = new THREE.GridHelper( size, divisions, color1, color1 );
+            
+        //ROTARLAS PARA QUE QUEDEN EN EL ESPACIO ADECUADO
+        gridHelperXY.rotateOnWorldAxis ( x, THREE.Math.degToRad(90) );
+        gridHelperXZ.rotateOnWorldAxis ( y, THREE.Math.degToRad(90) );
+        gridHelperYZ.rotateOnWorldAxis ( z, THREE.Math.degToRad(90) );
+            
+        //CREAR LAS FLECHAS QUE INDICAN LOS EJES DE COORDENADAS 3D
+        var arrowX = new THREE.ArrowHelper( x, origin, arrowSize, colorR );
+        var arrowY = new THREE.ArrowHelper( y, origin, arrowSize, colorG );
+        var arrowZ = new THREE.ArrowHelper( z, origin, arrowSize, colorB );
+			
+        //CREAR ILUMINACIÓN
+        ambientLight = new THREE.AmbientLight(0x233D4D,0.1);
+        scene.add(ambientLight);	
+        
+        light = new THREE.PointLight(0xB2DDF6,1,100,3);
+        light.position.set(-8,7,8);
+        light.castShadow = true;
+        light.shadow.camera.near = 2;
+        light.shadow.camera.far = 25;
+        scene.add(light);
+
+light2 = new THREE.PointLight(0xB2DDF6,1,100,3);
+        light2.position.set(5,12,-6);
+        light2.castShadow = true;
+        light2.shadow.camera.near = 2;
+        light2.shadow.camera.far = 25;
+        scene.add(light2);
+        
+      
+            
+			  //CREAR LOS MATERIALES    
+/////////////////////////////////////////////////
+
+var material1 = new THREE.MeshStandardMaterial( { color: colorR, metalness: 0.5, roughness: 0.1 } );
+var madera=new THREE.MeshStandardMaterial( { color: 0x43260B, metalness: .9, roughness: 0.5 } );
+var material = new THREE.MeshPhongMaterial( { color: 0xFFFFFF } );
+var material2 = new THREE.MeshPhongMaterial( { color: 0x002F87 } );
+var metal=new THREE.MeshStandardMaterial( { color: 0xFFFFFF, metalness: 0.5, roughness: 0.5 } );
+var metal2=new THREE.MeshStandardMaterial( { color: 0xFC0000, metalness: 0.5, roughness: 0.5 } );
+var madera2 = new THREE.MeshLambertMaterial ( { color: 0x863A35, reflectivity: 0.5 , refractionRatio: 0.5 });
+var pintura = new THREE.MeshPhongMaterial({color:0x3A6384});
+var tela = new THREE.MeshStandardMaterial( { color: 0x000000, metalness: 0.5, roughness: 0.5 } );
+var tela2 = new THREE.MeshPhongMaterial({color:0xA74630});
+var plastico = new THREE.MeshStandardMaterial( { color: 0x4D0E0E, metalness: 0.5, roughness: 0.5 } );
+var plastico2 = new THREE.MeshStandardMaterial( { color: 0x3A6384, metalness: 0.5, roughness: 0.5 } );
+var plastico3 = new THREE.MeshStandardMaterial( { color: 0x648806, metalness: 0.5, roughness: 0.5 } );
+var tela3=new THREE.MeshStandardMaterial( { color: 0xE4ECCF, metalness: 0.1, roughness: 0.1 } );
+/////////////////////////////////////////////////
+        var refle = new THREE.MeshLambertMaterial ( { color: 0xFFFFFF, reflectivity: 0.5 , refractionRatio: 0.5 });   
+        var gris = new THREE.MeshStandardMaterial( { color: 0xFFFFFF, metalness: 0.5, roughness: 0.5 } );     
+        var matpiso = new THREE.MeshPhongMaterial({color:0xffffff, wireframe:USE_WIREFRAME})
+   
+      
+        
+
+
+			  //CREAR LAS GEOMETRÍAS
+
+////////////////////////////////////////////////////////////
+
+
+var boxgeo = new THREE.BoxGeometry( 12,1, 5.5);
+var boxgeo2 = new THREE.BoxGeometry( 11.8,1, 5.3);
+var boxgeo3 = new THREE.BoxGeometry( 10,1, 5.4);
+var patas = new THREE.CylinderGeometry( 0.35, 0.2, 0.75, 32 );
+var patas2 = new THREE.CylinderGeometry( 0.35, 0.2, 1, 32 );
+var mesa1 = new THREE.BoxGeometry( 3.5,2.5, 3.5);
+var patamesa = new THREE.BoxGeometry( 0.5,2.85, 0.5);
+var m1 = new THREE.BoxGeometry( 4.5,0.5, 4.5);
+var mlarga = new THREE.BoxGeometry( 4,0.25, 10);
+var mlarga2 = new THREE.BoxGeometry( 4,3.5, 0.25);
+var mlarga3 = new THREE.BoxGeometry( 4,0.25, 6);
+ var ventana = new THREE.BoxGeometry(  0.25, 4.5, 8.5 );
+var pared = new THREE.BoxGeometry( 20, 10, 0.1 );
+var piso = new THREE.BoxGeometry( 20, 0.1, 20 );
+var cortina = new THREE.BoxGeometry(  0.1, 4,8);
+
+var sillat = new THREE.CylinderGeometry( 0.35, 2, 0.5, 32 );
+var sillat2 = new THREE.CylinderGeometry( 0.35, 0.35, 2, 32 );
+var sillat3 = new THREE.CylinderGeometry( 0.2, 0.2, 2, 32 );
+var sillat4 = new THREE.CylinderGeometry( 0.2, 0.2, 7, 32 );
+
+
+var vinilo = new THREE.CylinderGeometry( 1,1, 0.05, 32 );
+var vinilo2 = new THREE.CylinderGeometry( 0.35,0.35, 0.05, 32 );
+var vara= new THREE.CylinderGeometry( 0.05,0.05, 2, 32 );
+var boton = new THREE.BoxGeometry( 0.1,0.18, 0.2);
+var vara2= new THREE.CylinderGeometry( 0.05,0.05, 0.5, 32 );
+var vara3= new THREE.CylinderGeometry( 0.15,0.15, 0.5, 32 );
+
+var boxgeo4 = new THREE.BoxGeometry( 3.5,1.25, 3.5);
+var boxgeo5 = new THREE.BoxGeometry( 1.25,6, 3);
+var boxgeo6 = new THREE.BoxGeometry( 2.5,0.85, 2.3);
+var boxgeo7 = new THREE.BoxGeometry( 2.5,0.55, 2.3);
+var boxgeo8 = new THREE.BoxGeometry( 2,2.15, 0.05);
+var boxgeo9 = new THREE.BoxGeometry( 0.5,0.85, 2);
+var boxgeo10 = new THREE.BoxGeometry( 1.75,0.15, 1);
+
+
+var brazo = new THREE.TorusGeometry( 1.15, 0.5, 16, 100 );
+
+var bomb = new THREE.SphereGeometry( 0.25, 32, 32 );
+var bomb2 = new THREE.SphereGeometry( 0.05, 32, 32 );
+
+var cubrelam = new THREE.CylinderGeometry( 1,2, 2, 32 );
+///////////////////////////////////////////////////////////
+
+
+
+
+       
+       
+        
+        var pareda = new THREE.BoxGeometry( 20, 7.5, 0.1 );
+        
+
+
+
+
+
+                         //malla
+///////////////////////////////////////////////////////////
+
+var camabase = new THREE.Mesh( boxgeo, madera );
+camabase.position.y = 1.2;
+camabase.position.x = 4;
+camabase.position.z = 7;
+var cama = new THREE.Mesh( boxgeo2, material );
+cama.position.y = 2;
+cama.position.x = 4;
+cama.position.z = 7;
+var cubre = new THREE.Mesh( boxgeo3, material2 );
+cubre.position.y = 2.3;
+cubre.position.x = 3;
+cubre.position.z = 7;
+var pata1 = new THREE.Mesh( patas, metal );
+pata1.position.y = 0.35;
+pata1.position.x = -1;
+pata1.position.z = 9;
+var pata2 = new THREE.Mesh( patas, metal );
+pata2.position.y = 0.35;
+pata2.position.x = 9;
+pata2.position.z = 9;
+var pata3 = new THREE.Mesh( patas, metal );
+pata3.position.y = 0.35;
+pata3.position.x = -1;
+pata3.position.z = 5;
+var pata4 = new THREE.Mesh( patas, metal );
+pata4.position.y = 0.35;
+pata4.position.x = 9;
+pata4.position.z = 5;
+var smesa1 = new THREE.Mesh( mesa1, madera2 );
+smesa1.position.y = 1.75;
+smesa1.position.x = 7.5;
+smesa1.position.z = 2;
+var patamesa1 = new THREE.Mesh( patamesa, madera2 );
+patamesa1.position.y = 1.4;
+patamesa1.position.x = 9;
+patamesa1.position.z = 0.5;
+var patamesa2 = new THREE.Mesh( patamesa, madera2 );
+patamesa2.position.y = 1.4;
+patamesa2.position.x = 9;
+patamesa2.position.z = 3.5;
+var patamesa3 = new THREE.Mesh( patamesa, madera2 );
+patamesa3.position.y = 1.4;
+patamesa3.position.x = 6;
+patamesa3.position.z = 3.5;
+var patamesa4 = new THREE.Mesh( patamesa, madera2 );
+patamesa4.position.y = 1.4;
+patamesa4.position.x =6;
+patamesa4.position.z = 0.5;
+var cubrem = new THREE.Mesh( m1, madera2 );
+cubrem.position.y = 3;
+cubrem.position.x =7.5;
+cubrem.position.z = 2;
+
+var mesa2b = new THREE.Mesh( mlarga, madera2 );
+mesa2b.position.y = 1;
+mesa2b.position.x =-7.5;
+mesa2b.position.z = -4;
+
+var mesa2b2 = new THREE.Mesh( mlarga, madera2 );
+mesa2b2.position.y = 4.5;
+mesa2b2.position.x =-7.5;
+mesa2b2.position.z = -4;
+
+var mesa2s = new THREE.Mesh( mlarga2, madera2 );
+mesa2s.position.y = 2.8;
+mesa2s.position.x =-7.5;
+mesa2s.position.z = -1;
+
+
+var mesa2s2 = new THREE.Mesh( mlarga2, madera2 );
+mesa2s2.position.y = 2.8;
+mesa2s2.position.x =-7.5;
+mesa2s2.position.z = -7;
+
+var mesa2b3 = new THREE.Mesh( mlarga, madera2 );
+mesa2b3.position.y = 3;
+mesa2b3.position.x =-9.5;
+mesa2b3.position.z = -4;
+mesa2b3.rotation.z = Math.PI/2;
+
+var mesa2b4 = new THREE.Mesh( mlarga3, madera2 );
+mesa2b4.position.y = 3.5;
+mesa2b4.position.x =-7.5;
+mesa2b4.position.z = -4;
+
+var pata5 = new THREE.Mesh( patas2, metal );
+pata5.position.y = 0.5;
+pata5.position.x = -9;
+pata5.position.z = 0;
+
+var pata6 = new THREE.Mesh( patas2, metal );
+pata6.position.y = 0.5;
+pata6.position.x = -6.5;
+pata6.position.z = 0;
+
+var pata7 = new THREE.Mesh( patas2, metal );
+pata7.position.y = 0.5;
+pata7.position.x = -9;
+pata7.position.z = -8;
+
+var pata8 = new THREE.Mesh( patas2, metal );
+pata8.position.y = 0.5;
+pata8.position.x = -6.5;
+pata8.position.z = -8;
+
+var ventana1= new THREE.Mesh(ventana,refle);
+ventana1.position.y = 7;	
+ventana1.position.z = -4;
+ventana1.position.x = -9.75;
+
+var pared1 = new THREE.Mesh(pared,pintura);
+pared1.position.y = 5;	
+        pared1.position.z = 10;
+        var pared2 = new THREE.Mesh(pared,pintura);
+  pared2.position.y = 5;	
+        pared2.position.x = -10;
+pared2.rotation.y = Math.PI/2
+
+var cortina1= new THREE.Mesh(cortina,tela);
+cortina1.position.y = 7;	
+cortina1.position.z = -4;
+cortina1.position.x = -9.55;
+
+var barra = new THREE.Mesh( sillat, metal );
+barra.position.y = 0;
+barra.position.x = 2;
+barra.position.z = -3.5;
+
+var barra2 = new THREE.Mesh( sillat2, metal );
+barra2.position.y = 1;
+barra2.position.x = 2;
+barra2.position.z = -3.5;
+
+var barra3 = new THREE.Mesh( sillat3, metal );
+barra3.position.y = 2;
+barra3.position.x = 2;
+barra3.position.z = -3.5;
+
+var asiento = new THREE.Mesh( boxgeo4, tela2 );
+asiento.position.y = 3.5;
+asiento.position.x = 2;
+asiento.position.z = -3.5;
+var asiento2 = new THREE.Mesh( boxgeo5, tela2 );
+asiento2.position.y = 6;
+asiento2.position.x = 4;
+asiento2.position.z = -3.5;
+asiento2.rotation.z = Math.PI*5/6
+//asiento2.rotation.y = Math.PI/6
+
+var consola = new THREE.Mesh( boxgeo6, plastico );
+consola.position.y = 5;
+consola.position.x = -7.4;
+consola.position.z = -4;
+
+var libro = new THREE.Mesh( boxgeo7, metal2);
+libro.position.x = -7;
+libro.position.z = -2.5;
+libro.position.y = 1.5;
+//libro.rotation.x = Math.PI/2;
+
+var disco = new THREE.Mesh( vinilo, plastico);
+disco.position.x = -7;
+disco.position.z = -2.5;
+disco.position.y = 1.8;
+//libro.rotation.x = Math.PI/2;
+
+var tocador = new THREE.Mesh( vara, metal);
+tocador.position.x = -7.5;
+tocador.position.z = -2.5;
+tocador.position.y = 2;
+tocador.rotation.z = Math.PI/2;
+tocador.rotation.y = Math.PI*5/4;
+
+
+
+var tocador2 = new THREE.Mesh( boton, metal);
+tocador2.position.x = -6.75;
+tocador2.position.z = -3.2;
+tocador2.position.y = 2;
+tocador2.rotation.y = Math.PI*5/4;
+
+
+
+
+var bton = new THREE.Mesh( boton, metal);
+bton.position.x = -6;
+bton.position.z = -3.2;
+bton.position.y = 1.75;
+bton.rotation.z = Math.PI/2;
+
+
+
+
+var bton2 = new THREE.Mesh( vara2, metal);
+bton2.position.x = -6;
+bton2.position.z = -3.5;
+bton2.position.y = 1.6;
+//bton2.rotation.y = Math.PI/2;
+
+
+
+var bton3 = new THREE.Mesh( vara2, metal);
+bton3.position.x = -6.2;
+bton3.position.z = -3.5;
+bton3.position.y = 1.6;
+//bton3.rotation.y = Math.PI/2;
+
+
+var bton4 = new THREE.Mesh( vara2, metal);
+bton4.position.x = -6.2;
+bton4.position.z = -1.5;
+bton4.position.y = 1.6;
+//bton3.rotation.y = Math.PI/2;
+
+var bton5 = new THREE.Mesh( vara3, metal);
+bton5.position.x = -6;
+bton5.position.z = -1.8;
+bton5.position.y = 1.6;
+//bton3.rotation.y = Math.PI/2;
+
+
+var caja = new THREE.Mesh( boxgeo8, plastico2);
+caja.position.x = -6;
+caja.position.z = -5.45;
+caja.position.y = 2;
+caja.rotation.x = Math.PI*3/4;
+
+
+var caja2 = new THREE.Mesh( boxgeo8, plastico2);
+caja2.position.x = -6;
+caja2.position.z = -5.55;
+caja2.position.y = 2;
+caja2.rotation.x = Math.PI*3/4;
+
+
+var caja3 = new THREE.Mesh( boxgeo8, plastico2);
+caja3.position.x = -6;
+caja3.position.z = -5.65;
+caja3.position.y = 2;
+caja3.rotation.x = Math.PI*3/4;
+
+
+var caja4 = new THREE.Mesh( boxgeo8, plastico2);
+caja4.position.x = -6;
+caja4.position.z = -5.75;
+caja4.position.y = 2;
+caja4.rotation.x = Math.PI*3/4;
+
+
+var caja5 = new THREE.Mesh( boxgeo8, plastico2);
+caja5.position.x = -6;
+caja5.position.z = -5.85;
+caja5.position.y = 2;
+caja5.rotation.x = Math.PI*3/4;
+
+var caja6 = new THREE.Mesh( boxgeo8, plastico2);
+caja6.position.x = -6;
+caja6.position.z = -6.77;
+caja6.position.y = 2.2;
+//caja6.rotation.x = Math.PI*4/3;
+
+var caja7 = new THREE.Mesh( boxgeo8, plastico2);
+caja7.position.x = -6;
+caja7.position.z = -6.7;
+caja7.position.y = 2.2;
+//caja7.rotation.x = Math.PI*3/4;
+
+var caja8 = new THREE.Mesh( boxgeo8, plastico2);
+caja8.position.x = -6;
+caja8.position.z = -6.83;
+caja8.position.y = 2.2;
+//caja6.rotation.x = Math.PI*4/3;
+
+var relog = new THREE.Mesh( boxgeo9, plastico2);
+relog.position.x = 8;
+relog.position.z = 2;
+relog.position.y = 3.5;
+relog.rotation.y = Math.PI*4/3;
+
+var relog2 = new THREE.Mesh( boxgeo9, plastico2);
+relog2.position.x = 8;
+relog2.position.z = 2;
+relog2.position.y = 3.1;
+relog2.rotation.y = Math.PI*4/3;
+relog2.rotation.z= Math.PI/2;
+
+var relog3 = new THREE.Mesh( boton, plastico2);
+relog3.position.x = 8;
+relog3.position.z = 2;
+relog3.position.y = 3.9;
+relog3.rotation.y = Math.PI*4/3;
+//relog3.rotation.x= Math.PI/2;
+
+var relog4 = new THREE.Mesh( boton, plastico2);
+relog4.position.x = 8.5;
+relog4.position.z = 2.3;
+relog4.position.y = 3.9;
+relog4.rotation.y = Math.PI*4/3;
+//relog3.rotation.x= Math.PI/2;
+
+var l1 = new THREE.Mesh( brazo, plastico );
+l1.position.y = 4;
+l1.position.x = 2;
+l1.position.z = -1.75;
+
+var l2 = new THREE.Mesh( brazo,plastico );
+l2.position.y = 4;
+l2.position.x = 2;
+l2.position.z = -5.;
+
+var lampara1 = new THREE.Mesh( sillat, metal );
+lampara1.position.y = 0;
+lampara1.position.x = -8;
+lampara1.position.z = 8;
+var lampara2 = new THREE.Mesh( sillat4, metal );
+lampara2.position.y = 3.5;
+lampara2.position.x = -8;
+lampara2.position.z = 8;
+
+var blampara= new THREE.Mesh( bomb, metal );
+blampara.position.y = 1.5;
+blampara.position.x = -8;
+blampara.position.z = 8;
+
+
+var blampara2= new THREE.Mesh( bomb, metal );
+blampara2.position.y = 4.5;
+blampara2.position.x = -8;
+blampara2.position.z = 8;
+
+var blampara3= new THREE.Mesh( bomb2, metal );
+blampara3.position.y = 7;
+blampara3.position.x = -8;
+blampara3.position.z = 8;
+
+var lamparac= new THREE.Mesh( cubrelam, tela3 );
+lamparac.position.y = 7;
+lamparac.position.x = -8;
+lamparac.position.z = 8;
+
+var blampara4= new THREE.Mesh( bomb, metal );
+blampara4.position.y = 12;
+blampara4.position.x = 5;
+blampara4.position.z = -6;
+
+var caja9 = new THREE.Mesh( boxgeo10, plastico3);
+caja9.position.x = -8;
+caja9.position.z = -0.5;
+caja9.position.y = 4.8;
+//caja6.rotation.x = Math.PI*4/3;
+
+
+var caja10 = new THREE.Mesh( boxgeo10, plastico3);
+caja10.position.x = -8;
+caja10.position.z = -0.5;
+caja10.position.y = 5;
+caja10.rotation.y = Math.PI*4/3;
+
+var caja11 = new THREE.Mesh( boxgeo10, plastico3);
+caja11.position.x = -7;
+caja11.position.z = -0.5;
+caja11.position.y = 4.8;
+caja11.rotation.y = Math.PI/2;
+
+var disco2 = new THREE.Mesh( vinilo, plastico);
+disco2.position.x = 7;
+disco2.position.z = 9.8;
+disco2.position.y = 8;
+disco2.rotation.x = Math.PI/2;
+
+var disco3 = new THREE.Mesh( vinilo, plastico);
+disco3.position.x = 7;
+disco3.position.z = 9.8;
+disco3.position.y = 4.5;
+disco3.rotation.x = Math.PI/2;
+
+var disco4 = new THREE.Mesh( vinilo, plastico);
+disco4.position.x = 3;
+disco4.position.z = 9.8;
+disco4.position.y = 8;
+disco4.rotation.x = Math.PI/2;
+
+var disco5 = new THREE.Mesh( vinilo, plastico);
+disco5.position.x = 3;
+disco5.position.z = 9.8;
+disco5.position.y = 4.5;
+disco5.rotation.x = Math.PI/2;
+
+var disco6 = new THREE.Mesh( vinilo, plastico);
+disco6.position.x = -1;
+disco6.position.z = 9.8;
+disco6.position.y = 8;
+disco6.rotation.x = Math.PI/2;
+
+var disco7 = new THREE.Mesh( vinilo, plastico);
+disco7.position.x = -1;
+disco7.position.z = 9.8;
+disco7.position.y = 4.5;
+disco7.rotation.x = Math.PI/2;
+
+
+
+var disco8 = new THREE.Mesh( vinilo2, plastico2);
+disco8.position.x = 7;
+disco8.position.z = 9.75;
+disco8.position.y = 8;
+disco8.rotation.x = Math.PI/2;
+
+var disco9 = new THREE.Mesh( vinilo2, plastico2);
+disco9.position.x = 7;
+disco9.position.z = 9.75;
+disco9.position.y = 4.5;
+disco9.rotation.x = Math.PI/2;
+
+var disco10 = new THREE.Mesh( vinilo2, plastico2);
+disco10.position.x = 3;
+disco10.position.z = 9.75;
+disco10.position.y = 8;
+disco10.rotation.x = Math.PI/2;
+
+var disco11 = new THREE.Mesh( vinilo2, plastico2);
+disco11.position.x = 3;
+disco11.position.z = 9.75;
+disco11.position.y = 4.5;
+disco11.rotation.x = Math.PI/2;
+
+var disco12 = new THREE.Mesh( vinilo2, plastico2);
+disco12.position.x = -1;
+disco12.position.z = 9.75;
+disco12.position.y = 8;
+disco12.rotation.x = Math.PI/2;
+
+var disco13 = new THREE.Mesh( vinilo2, plastico2);
+disco13.position.x = -1;
+disco13.position.z = 9.75;
+disco13.position.y = 4.5;
+disco13.rotation.x = Math.PI/2;
+
+///////////////////////////////////////////////////////////
+
+
+
+
+
+                        //a csg
+//////////////////////////////////////////////////////////
+
+var boxCSG = THREE.CSG.fromMesh( camabase );
+var box2CSG = THREE.CSG.fromMesh( cama);
+var box3CSG = THREE.CSG.fromMesh( cubre);
+var cilinderCSG = THREE.CSG.fromMesh( pata1);
+var cilinderCSG = THREE.CSG.fromMesh( pata2);
+var box4CSG = THREE.CSG.fromMesh( smesa1);
+var box5CSG = THREE.CSG.fromMesh( patamesa1);
+var box6CSG = THREE.CSG.fromMesh( patamesa2);
+var box7CSG = THREE.CSG.fromMesh( patamesa3);
+var box8CSG = THREE.CSG.fromMesh( patamesa4);
+var box9CSG = THREE.CSG.fromMesh( cubrem);
+//////////////////////////////////////////////////////////
+        
+
+
+
+
+
+ //APLICAR LAS OPERACIONES
+//////////////////////////////////////////////////////////////////////////////////////////
+			var result = boxCSG;
+                        caja1 = THREE.CSG.toMesh( result );
+                       caja1.material = material1;
+                       
+                       var result2=box4CSG.union( box5CSG ).union( box6CSG ).union( box7CSG ).union( box8CSG ).union( box9CSG );
+                        mesanoche= THREE.CSG.toMesh( result2 );
+                        mesanoche.material=madera2;
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+        
+       
+        var PISO = new THREE.Mesh(piso,matpiso);
+        
+        
+
+
+
+
+camabase.receiveShadow = true;
+        camabase.castShadow = true;
+cama.receiveShadow = true;
+        cama.castShadow = true;
+cubre.receiveShadow = true;
+        cubre.castShadow = true;
+pata1.receiveShadow = true;
+        pata1.castShadow = true;
+pata2.receiveShadow = true;
+        pata2.castShadow = true;
+pata3.receiveShadow = true;
+       pata3.castShadow = true;
+pata4.receiveShadow = true;
+       pata4.castShadow = true;
+cubrem.receiveShadow = true;
+       cubrem.castShadow = true;
+mesa2b.receiveShadow = true;
+       mesa2b.castShadow = true;
+mesa2b2.receiveShadow = true;
+       mesa2b2.castShadow = true;
+mesa2s.receiveShadow = true;
+       mesa2s.castShadow = true;
+mesa2s2.receiveShadow = true;
+       mesa2s2.castShadow = true;
+mesa2b3.receiveShadow = true;
+       mesa2b3.castShadow = true;
+mesa2b4.receiveShadow = true;
+       mesa2b4.castShadow = true;
+ mesanoche.receiveShadow = true;
+        mesanoche.castShadow = true;
+pata5.receiveShadow = true;
+        pata5.castShadow = true;
+pata6.receiveShadow = true;
+        pata6.castShadow = true;
+pata7.receiveShadow = true;
+       pata7.castShadow = true;
+pata8.receiveShadow = true;
+       pata8.castShadow = true;
+PISO.receiveShadow = true;
+
+pared1.receiveShadow = true;
+pared2.receiveShadow = true;
+
+cortina1.receiveShadow = true;
+       cortina1.castShadow = true;
+
+barra.receiveShadow = true;
+       barra.castShadow = true;
+
+barra2.receiveShadow = true;
+       barra2.castShadow = true;
+
+barra3.receiveShadow = true;
+       barra3.castShadow = true;
+
+asiento.receiveShadow = true;
+       asiento.castShadow = true; 
+
+
+asiento2.receiveShadow = true;
+       asiento2.castShadow = true; 
+
+     
+libro.receiveShadow = true;
+       libro.castShadow = true;   
+ 
+consola.receiveShadow = true;
+       consola.castShadow = true;
+ 
+disco.receiveShadow = true;
+       disco.castShadow = true;  
+
+tocador.receiveShadow = true;
+       tocador.castShadow = true; 
+
+tocador2.receiveShadow = true;
+       tocador2.castShadow = true;   
+
+bton2.receiveShadow = true;
+       bton2.castShadow = true;
+
+
+bton3.receiveShadow = true;
+       bton3.castShadow = true; 
+
+
+bton4.receiveShadow = true;
+       bton4.castShadow = true; 
+
+
+bton5.receiveShadow = true;
+       bton5.castShadow = true; 
+
+
+bton.receiveShadow = true;
+       bton.castShadow = true;  
+
+
+caja.receiveShadow = true;
+       caja.castShadow = true; 
+
+caja2.receiveShadow = true;
+       caja2.castShadow = true; 
+
+caja3.receiveShadow = true;
+       caja3.castShadow = true; 
+
+caja4.receiveShadow = true;
+       caja4.castShadow = true; 
+
+caja5.receiveShadow = true;
+       caja5.castShadow = true; 
+
+caja6.receiveShadow = true;
+       caja6.castShadow = true; 
+
+caja7.receiveShadow = true;
+       caja7.castShadow = true; 
+
+caja8.receiveShadow = true;
+       caja8.castShadow = true; 
+
+relog.receiveShadow = true;
+       relog.castShadow = true; 
+relog2.receiveShadow = true;
+       relog2.castShadow = true; 
+
+relog3.receiveShadow = true;
+       relog3.castShadow = true; 
+
+relog4.receiveShadow = true;
+       relog4.castShadow = true; 
+l1.receiveShadow = true;
+       l1.castShadow = true; 
+
+l2.receiveShadow = true;
+       l2.castShadow = true; 
+
+lampara1.receiveShadow = true;
+       lampara1.castShadow = true;
+
+lampara2.receiveShadow = true;
+       lampara2.castShadow = true;
+
+blampara.receiveShadow = true;
+       blampara.castShadow = true;
+
+blampara2.receiveShadow = true;
+       blampara2.castShadow = true;
+
+caja9.receiveShadow = true;
+       caja9.castShadow = true; 
+
+caja10.receiveShadow = true;
+       caja10.castShadow = true; 
+
+caja11.receiveShadow = true;
+       caja11.castShadow = true; 
+
+disco2.receiveShadow = true;
+       disco.castShadow = true; 
+
+disco3.receiveShadow = true;
+       disco.castShadow = true; 
+
+disco4.receiveShadow = true;
+       disco.castShadow = true; 
+
+disco5.receiveShadow = true;
+       disco.castShadow = true; 
+
+disco6.receiveShadow = true;
+       disco.castShadow = true; 
+
+disco7.receiveShadow = true;
+       disco.castShadow = true; 
+
+
+		  	//AGREGAR A LA ESCENA
+
+
+//////////////////////////////////////////
+
+scene.add( caja1 );
+scene.add(cama);
+scene.add(cubre);
+scene.add(pata1);
+scene.add(pata2);
+scene.add(pata3);
+scene.add(pata4);
+scene.add(mesanoche);
+scene.add(mesa2b);
+scene.add(mesa2b2);
+scene.add(mesa2b3);
+scene.add(mesa2b4);
+scene.add(mesa2s);
+scene.add(mesa2s2);
+scene.add(pata5);
+scene.add(pata6);
+scene.add(pata7);
+scene.add(pata8);
+scene.add(cortina1);
+scene.add(barra);
+scene.add(barra2);
+scene.add(barra3);
+scene.add(asiento);
+scene.add(asiento2);
+scene.add(consola);
+scene.add(libro);
+scene.add(disco);
+scene.add(tocador);
+scene.add(tocador2);
+scene.add(bton);
+scene.add(bton2);
+scene.add(bton3);
+scene.add(bton4);
+scene.add(bton5);
+scene.add(caja);
+scene.add(caja2);
+scene.add(caja3);
+scene.add(caja4);
+scene.add(caja5);
+scene.add(caja6);
+scene.add(caja7);
+scene.add(caja8);
+scene.add(relog);
+scene.add(relog2);
+scene.add(relog3);
+scene.add(relog4);
+scene.add(l1);
+scene.add(l2);
+scene.add(lampara1);
+scene.add(lampara2);
+scene.add(blampara);
+scene.add(blampara2);
+scene.add(blampara3);
+scene.add(blampara4);
+scene.add(lamparac);
+scene.add(caja9);
+scene.add(caja10);
+scene.add(caja11);
+scene.add(disco2);
+scene.add(disco3);
+scene.add(disco4);
+scene.add(disco5);
+scene.add(disco6);
+scene.add(disco7);
+scene.add(disco8);
+scene.add(disco9);
+scene.add(disco10);
+scene.add(disco11);
+scene.add(disco12);
+scene.add(disco13);
+/////////////////////////////////////////
+
+
+
+
+        gridHelperXY.position.z=-10.1;
+        gridHelperXY.position.x=0.1;
+        gridHelperXY.position.y=1.3;  
+        gridHelperYZ.position.x=-9.8;
+        gridHelperYZ.position.z=0.1;
+        gridHelperYZ.position.y=1.3;  
+		  	//scene.add( gridHelperXY );
+		  	//scene.add( gridHelperYZ );
+        //scene.add( gridHelperXZ );
+		  	scene.add( arrowX );	
+		  	scene.add( arrowY );	
+		  	scene.add( arrowZ );
+        
+        
+       
+        
+        
+      
+        ;
+        
+       
+        PISO.receiveShadow = true;
+       
+			  scene.add( ventana1);
+			 
+			  scene.add( pared1);
+			  scene.add( pared2);
+			
+			  scene.add( PISO);
+        camera.position.x = 25;
+        camera.position.y = 25;	 
+        camera.position.z = 25;
+        camera.lookAt( 0, 0, 0 );
+			}
+    
+    function animate() {
+        requestAnimationFrame( animate );
+        controls.update()
+        render();
+    }
+    
+    function render(){
+        renderer.render( scene, camera );
+    }
+    </script>
+  </body>
+</html>
